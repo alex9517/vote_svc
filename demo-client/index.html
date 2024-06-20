@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vote Service</title>
+<meta name="description" content="HTML template" />
+<meta name="keywords" content="html css web site page" />
+<meta name="charset" content="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="css/w3.css" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/form.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/auxlib.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script>
+var resources;
+var deadline;
+
+$(function() {
+  const Url = SERVICE_URL + "/votes/" + VOTE_ID;
+  console.log("Url: " + Url);
+
+  $.ajax({
+    url: Url,
+    type: 'GET',
+    dataType: 'json',
+  })
+  .done (function(rec, textStatus, jqXHR) {
+    // console.log('Record : ' + rec);
+    console.log('Record : ' + rec.v0.vote_id + ', ' + rec.v0.header +
+        ', ' + rec.v0.message + ', ' + rec.v0.resources + ', ' + rec.v0.deadline);
+
+    $("#header1").html(rec.v0.header);
+    $("#message1").html(rec.v0.message);
+
+    resources = rec.v0.resources;
+    console.log("Resources: " + resources);
+
+    deadline = rec.v0.deadline;
+    allow_results = rec.v0.allow_results;
+
+    let contenders = rec.v0.contenders;
+
+    contenders.forEach(function(co) {
+    //   console.log('Contender: ' + co.id + ', ' + co.name + ', ' + co.count);
+
+      $("#radio1").append($('<div><input class="w3-radio" type="radio" name="option" value="' + co.id + '">' +
+           '<label>' + co.name  + '</label></div>'));
+    });
+
+  })
+  .fail (function(jqXHR, textStatus, errorThrown) {
+    const errMsg = checkMessageLen(jqXHR.status + " " + jqXHR.statusText + "; " + jqXHR.responseText);
+    console.log(errMsg);
+    console.log('jqXHR.status : ' + jqXHR.status);
+    console.log('textStatus : ' + textStatus);
+    const errPage = getErrPage(jqXHR.status);
+    console.log(errPage);
+
+    setCookie(KEY_APP_MESSAGE, errMsg, {'max-age': MSG_EXPIRE});
+    window.location.replace(errPage);
+  });
+
+  $(window).on("unload", function() {
+    console.log("Leaving page " + window.location.href);
+  });
+
+  $('[name="btnCancel"]').focus();
+});
+
+const sendData = () => {
+  const radioValue = $("input[name='option']:checked").val();
+  // console.log('Radio selection is ' + radioValue);
+
+  const Url = SERVICE_URL + "/votes";
+  console.log("Url: " + Url);
+
+  let userUUID = getCookie(KEY_VOTE);
+  console.log("userUUID: " + userUUID);
+
+  if (userUUID && ONE_VOTE) {
+    console.log("userUUID: " + userUUID);
+    window.location.replace(VOTED_BEFORE);
+  } else {
+    userUUID = crypto.randomUUID();
+    console.log("New userUUID: " + userUUID);
+    setCookie(KEY_VOTE, userUUID, {'max-age': VOTE_EXPIRE});
+  }
+
+  let jsonObj = {};
+
+  jsonObj["vote_id"] = VOTE_ID;
+  jsonObj["co_id"] = Number(radioValue);
+  jsonObj["user_id"] = userUUID;
+
+  const dataToSend = JSON.stringify(jsonObj);
+  console.log('dataToSend: ' + dataToSend);
+
+  $.ajax ({
+    url: Url,
+    type: 'PUT',
+    dataType: 'json',
+    data: dataToSend,
+    // async: false,
+    contentType: 'application/json',
+    //beforeSend: function(xhr) {
+    //    xhr.setRequestHeader("Authorization", basicAuth);
+    //},
+  })
+  .done (function(data, textStatus, jqXHR) {
+    if (jqXHR.status == 200) {
+      window.location.replace(VOTED_OK);
+    } else {
+      console.log("Response status: " + jqXHR.status + jqXHR.statusText);
+      // alert(jqXHR.status + jqXHR.statusText)
+      const errPage = getErrPage(jqXHR.status);
+      console.log(errPage);
+      setCookie(KEY_APP_MESSAGE, errMsg, {'max-age': MSG_EXPIRE});
+      window.location.assign(errPage);
+    }
+  })
+  .fail (function(jqXHR, textStatus, errorThrown) {
+    const errMsg = checkMessageLen('Update failed! '
+        + jqXHR.status + " " + jqXHR.statusText
+        + "; " + jqXHR.responseText);
+    console.log(errMsg);
+    const errPage = getErrPage(jqXHR.status);
+    console.log(errPage);
+    setCookie(KEY_APP_MESSAGE, errMsg, {'max-age': MSG_EXPIRE});
+    window.location.assign(errPage);
+  });
+};
+</script>
+</head><body>
+
+<main>
+
+<h1 id="header1">???</h1>
+
+<script>
+document.write("<p class=\"date_cen\">" + getCurrDate() + "</p>\n");
+</script>
+
+<h4 style="text-align:center;padding-top:0" id="message1">???</h4>
+
+
+<div class="vbox">
+<form id="vote">
+<div id="radio1" style="margin-left:auto;margin-right:auto;padding:0;font-size:140%">
+
+</div></form></div>
+
+<div class="btn_center" style="font-family:'Droid Sans'" id="buttons">
+
+<input type="button" name="btnOk" id="btn1" style="width:9rem"
+    class="w3-button w3-large w3-round w3-green w3-hover-green"
+    value="OK" onclick="sendData()" />
+
+<input type="button" name="btnCancel" style="width:9rem"
+    class="w3-button w3-large w3-round w3-purple w3-hover-purple"
+    value="Cancel" onclick="moveBack()" />
+
+<input type="button" name="btnBack" style="width:9rem"
+    class="w3-button w3-large w3-round w3-purple w3-hover-purple"
+    value="Back" onclick="moveBack()" />
+
+</div>
+</main>
+</body></html>

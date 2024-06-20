@@ -1,0 +1,291 @@
+@charset "UTF-8";
+@viewport { width: device-width; scale: 1; }
+
+@font-face {
+font-family: 'Droid Sans';
+src: url('DroidSans.woff') format('woff');
+font-weight: normal;
+}
+
+@font-face {
+font-family: 'Droid Sans';
+src: url('DroidSans-Bold.woff') format('woff');
+font-weight: bold;
+}
+
+@font-face {
+font-family: 'Droid Sans Mono';
+src: url('DroidSansMono.woff') format('woff');
+}
+
+header, section, footer, aside, nav, article, figure, figcaption {
+display: block;
+}
+
+html {
+height: 100%;
+}
+
+body {
+margin: 0;
+border: 0;
+padding: 0;
+min-width: 480px;
+min-height: 100%;
+font-size: 2vw;
+background: rgb(255,228,225);
+}
+
+#main1 {
+margin: 0;
+border: 0;
+padding: 1em 0.3em 1em 0.3em;
+font-family: 'Droid Sans', sans-serif;
+background: lightskyblue;
+color: mediumslateblue;
+}
+
+#done {
+margin: 0;
+border: 0;
+padding: 1em 0.3em 1em 0.3em;
+font-family: 'Droid Sans', sans-serif;
+background: rgb(110, 225, 135);
+color: seagreen;
+}
+
+#fail {
+margin: 0;
+border: 0;
+padding: 1em 0.3em 1em 0.3em;
+font-family: 'Droid Sans', sans-serif;
+background: rgb(255,228,225);
+color: rgb(255,128,0);
+}
+
+div.excep {
+display: none;
+-moz-border-radius: 0.5em;
+-webkit-border-radius: 0.5em;
+-khtml-border-radius: 0.5em;
+border-radius: 0.5em;
+border: 0;
+margin: 0.5em 0 0.5em 0;
+padding: 0.2em;
+font-family: 'Droid Sans', sans-serif;
+font-size: 60%;
+background: rgb(255,238,235);
+color: rgb(50,50,50);
+}
+
+a:link, a:visited {
+text-decoration: none;
+color: rgb(255,128,0);
+}
+
+a:hover {
+text-decoration: none;
+color: rgb(255,158,0);
+}
+
+.error {
+color: rgb(255,128,0);
+}
+
+.error_msg {
+color: magenta;
+}
+
+hr {
+margin: 0.5em 0.2em 0.5em 0.2em;
+border: none;
+height: 3px;
+color: dodgerblue;
+background-color: rgb(255,218,215);
+}
+
+span.dim {
+color: gray;
+}
+
+p {
+margin: 0;
+padding: 0 0 0.5em 0;
+text-align: left;
+}
+
+.stack {
+padding: 0.2em 0.2em 0.2em 2.5em;
+text-indent: -2em;
+}
+
+p.center {
+text-align: center;
+}
+
+.center_big {
+text-align: center;
+padding: 0 4em 0.5em 4em;
+font-size: 120%;
+}
+
+.indent {
+text-align: justify;
+text-indent: 1.5em;
+}
+
+.ext {
+text-indent: -2em;
+padding-left: 2em;
+}
+
+.just {
+text-align: justify;
+}
+
+.menu_item {
+padding: 0 0 1em 2em;
+text-indent: -2em;
+font-size: 120%;
+}
+
+.menu_item_indent {
+padding: 0 0 1em 4em;
+text-indent: -2em;
+font-size: 120%;
+}
+
+.menu_item_cen {
+text-align: center;
+padding: 0.5em 0 1em 0;
+font-size: 120%;
+}
+
+.btn {
+padding: 1em 0 1em 2em;
+}
+
+.btn_center {
+text-align: center;
+padding: 1em 0 1em 0;
+}
+
+span.term {
+font-family: 'Droid Sans Mono', Monospace, Courier;
+color: deeppink;
+}
+
+table {
+width: 80%;
+margin-left: auto;
+margin-right: auto;
+border: 0;
+}
+
+td {
+border: 0;
+padding: 0.2em 0.5em 0.2em 0.5em;
+vertical-align: top;
+}
+
+td.right {
+text-align: right;
+}
+
+h1 {
+margin: 0;
+padding: 0.3em 0 0.2em 0;
+font-family: 'Droid Sans', sans-serif;
+/* font-stretch: expanded; */
+/* font-stretch: extra-expanded; */
+font-weight: bold;
+font-size: 400%;
+text-align: center;
+color: rgb(255,128,0);
+}
+
+h1.status {
+font-size: 250%;
+text-align: center;
+color: seagreen;
+}
+
+h2 {
+margin: 0;
+padding: 0 0 1em 0;
+font-family: 'Droid Sans', sans-serif;
+/* font-stretch: expanded; */
+font-weight: bold;
+font-size: 200%;
+text-align: center;
+color: rgb(255,128,0);
+}
+
+h2.status {
+font-size: 180%;
+text-align: center;
+color: seagreen;
+}
+
+.button {
+margin: 0.5em;
+border: none;
+color: white;
+width: 9em;
+height: 3em;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 100%;
+border-radius: 0.3em;
+background-color: rgb(255,128,0);
+background: linear-gradient(rgb(255,255,128), rgb(255,100,0));
+}
+
+.button:hover {
+background-color: rgb(255,128,0);
+background: linear-gradient(rgb(255,255,128), rgb(255,130,0));
+color: white;
+}
+
+.button_blue {
+margin: 0.5em;
+border: none;
+color: white;
+width: 9em;
+height: 3em;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 100%;
+border-radius: 0.3em;
+background-color: rgb(50,164,255);
+background: linear-gradient(rgb(90,204,255), rgb(20,134,235));
+}
+
+.button_blue:hover {
+color: white;
+background-color: rgb(60,174,255);
+background: linear-gradient(rgb(100,214,255), rgb(30,144,245));
+}
+
+.button_green {
+margin: 0.5em;
+border: none;
+color: white;
+width: 9em;
+height: 3em;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 100%;
+border-radius: 0.3em;
+background-color: rgb(66,159,107);
+background: linear-gradient(rgb(120,213,161), rgb(66,159,107));
+}
+
+.button_green:hover {
+color: white;
+background-color: rgb(76,169,117);
+background: linear-gradient(rgb(130,223,171), rgb(76,169,117));
+}

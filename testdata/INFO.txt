@@ -1,0 +1,4 @@
+All 'GET' tests were performed when service was started with '-rate-limit 500' (default is 200).
+Test duration 20 sec
+The number of threads (users): 20, 100, 1000, 10000
+In all tests errors were 0%.

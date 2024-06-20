@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vote Service / Results</title>
+<meta name="description" content="HTML template" />
+<meta name="keywords" content="html css web site page" />
+<meta name="charset" content="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="css/w3.css" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/form.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/auxlib.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script src="js/plotly-2.30.0.min.js" charset="utf-8"></script>
+<script>
+var deadline;
+
+$(function() {
+  const Url = SERVICE_URL + '/votes/' + VOTE_ID + '/results';
+  console.log("Url: " + Url);
+
+  $.ajax({
+    url: Url,
+    type: 'GET',
+    dataType: 'json',
+  })
+  .done (function(rec, textStatus, jqXHR) {
+    console.log('Record : ' + rec.v0.vote_id + ', ' + rec.v0.header +
+        ', ' + rec.v0.message + ', ' + rec.v0.resources + ', ' + rec.v0.deadline);
+
+    $("#header1").html(rec.v0.header);
+    deadline = new Date(rec.v0.deadline);
+    let currDateTime = new Date();
+
+    console.log("Curr datetime: " + currDateTime);
+    console.log("Deadline     : " + deadline);
+
+    if (currDateTime >= deadline) {
+      $("#message1").html(MSG_FINAL_RESULTS);
+    } else {
+      let s = deadline.toString();
+      let s1 = s.substring(0, 21);
+      $("#message1").html(MSG_CURRENT_RESULTS + s1 + ")");
+    }
+
+    // resources = rec.v0.resources;
+    // allow_results = rec.v0.allow_results;
+
+    let contenders = rec.v0.contenders;
+
+    let votesTotal = 0;
+    contenders.forEach(function(co) {
+      console.log('Contender: ' + co.id + ', ' + co.name + ', ' + co.alias + ', ' + co.count + ', ' + co.picture);
+      votesTotal = votesTotal + co.count;
+
+      $("#info1").append($("\n<section>\n<figure>\n<img class=\"avatar\" src=\"" + RESOURCES_URL + "/" + co.picture +
+          "\" />\n<figcaption>" + co.name + "</figcaption>\n</figure>\n</section>\n"));
+    });
+
+    console.log('Votes, total: ' + votesTotal);
+    const dataFromSvc = {};
+
+    contenders.forEach(function(co) {
+      let n = co.count * 100 / votesTotal;
+      console.log(co.alias + ': ' + n.toFixed(2));
+      dataFromSvc[co.alias] = Number(n.toFixed(2));
+    });
+
+    console.log(dataFromSvc);
+
+    const jsonObj = JSON.parse(JSON.stringify(dataFromSvc));
+    const dataMap = new Map(Object.entries(jsonObj));
+    //console.log('dataMap: ' + dataMap);
+    //const contendersObj = JSON.parse(contenders);
+
+    var data = [{
+      y: Array.from(dataMap.keys()),
+      x: Array.from(dataMap.values()),
+      marker: {color: 'rgb(0, 169, 0)'},
+      type: 'bar',
+      base: 0,
+      orientation: 'h'}]
+
+    var layout = {
+      margin: {l: 140, pad: 8},
+      autosize: true,
+      title: {
+        text: "Relative numbers in %",
+        xanchor: "center",
+        font: {
+          family: "Droid Sans",
+          color: "darkorchid",
+          size: 32
+        }
+      },
+      showlegend: false,
+      paper_bgcolor: 'rgb(255, 245, 220)',
+      plot_bgcolor: 'rgb(255, 245, 220)',
+      xaxis: {
+        linecolor: '#B2BBED',
+        color: '#B2BBED',
+        tickfont: {
+          size: 14,
+          color: '#727BAD'
+        },
+        gridwidth: 1,
+        gridcolor: '#B2BBED'
+      },
+      yaxis: {
+        color: '#B2BBED',
+//        title: 'Candidates',
+        titlefont: {
+          size: 24,
+          color: 'rgb(107, 107, 107)'
+        },
+        tickfont: {
+          size: 20,
+          color: 'rgb(0, 128, 0)'
+        },
+      }
+    }
+
+    Plotly.newPlot('results', data, layout, {displayModeBar: true})
+  })
+  .fail (function(jqXHR, textStatus, errorThrown) {
+    const errMsg = checkMessageLen(jqXHR.status + " " + jqXHR.statusText + "; " + jqXHR.responseText);
+    console.log(errMsg);
+    console.log('jqXHR.status : ' + jqXHR.status);
+    console.log('textStatus : ' + textStatus);
+    const errPage = getErrPage(jqXHR.status);
+    console.log(errPage);
+    setCookie(KEY_APP_MESSAGE, errMsg, {'max-age': MSG_EXPIRE});
+    window.location.replace(errPage);
+  });
+
+  //$(window).on("unload", function() {
+    //console.log("Leaving page " + window.location.href);
+  //});
+
+  $('[name="btnOk"]').focus();
+});
+</script>
+</head><body>
+
+<main>
+
+<h1 id="header1">???</h1>
+
+<script>
+document.write("<p class=\"date_cen\">" + getCurrDate() + "</p>\n");
+</script>
+
+<h4 style="text-align:center;padding-top:0" id="message1">???</h4>
+
+<div class="vbox">
+
+<div class="hbox" id="info1"></div>
+
+<div id="results" style="width:90%;height:400px"></div>
+
+<div class="btn_center" style="font-family:'Droid Sans'" id="buttons">
+
+<input type="button" name="btnOk" style="width:9rem"
+    class="w3-button w3-large w3-round w3-green w3-hover-green"
+    value="OK" onclick="moveBack()" />
+
+<input type="button" name="btnBack" style="width:9rem"
+    class="w3-button w3-large w3-round w3-purple w3-hover-purple"
+    value="Exit" onclick="moveBack()" />
+
+</div>
+
+</main>
+
+</body></html>

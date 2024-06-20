@@ -1,0 +1,12 @@
+# Ignore executable.
+vote-svc
+
+# Ignore old stuff (outdated, deprecated source code).
+old/
+
+# Project doc is not ready. Ignore.
+demo-client/proj_doc/
+
+# Ignore all generated test results in 'testdata' dir.
+testdata/votes*/
+testdata/jmeter.log

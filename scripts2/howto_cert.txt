@@ -1,0 +1,47 @@
+NOTE! The following BASH scripts
+
+  create_cert.sh
+  create_ca.sh
+
+output result in the current dir. That is,
+you should manually copy the created files to the right dir.
+
+In case of api_gateway proj, the correct location is
+
+  api_gateway_01/cert/
+
+Before you start, check "certificate.conf".
+
+
+
+Generating TLS Certificates
+===========================
+
+CA Signed certificates
+----------------------
+1. Create Root signing Key
+
+    openssl genrsa -out ca.key 4096
+
+2. Generate self-signed Root certificate
+
+    openssl req -new -x509 -key ca.key -sha256 -subj "/C=EU/ST=Europe/O=Inter Soft Dev" -days 365 -out ca.cert
+
+3. Create a certificate key for your service
+
+    openssl genrsa -out service.key 4096
+
+4. Create signing CSR (for local testing you can use `'/CN=localhost'`,
+   for online testing `CN` needs to be replaced with your gRPC Server,
+   like `'/CN=grpc.example.com'`. Include this in a config file
+   ([certificate.conf](certificate.conf)).
+
+    openssl req -new -key service.key -out service.csr -config certificate.conf
+
+5. Generate a certificate for the service
+
+    openssl x509 -req -in service.csr -CA ca.cert -CAkey ca.key -CAcreateserial -out service.pem -days 365 -sha256 -extfile certificate.conf -extensions req_ext
+
+6. Verify
+
+    openssl x509 -in service.pem -text -noout

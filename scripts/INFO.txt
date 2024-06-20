@@ -1,0 +1,49 @@
+Apache Cassandra, auth
+-----------------------
+Internal authentication and authorization information is stored in the following Cassandra tables:
+
+system_auth.roles
+    Table that stores the role name, whether the role can be used for login, whether the role is a superuser, what other roles
+    the role may be a member of, and a bcrypt salted hash password for the role.
+
+system_auth.role_members
+    Table that stores the roles and role members.
+
+system_auth.role_permissions
+    Table that stores the role, a resource (keyspace, table), and the permission that the role has to access the resource.
+
+system_auth.recqlshSourceole_permissons_index
+    Table that stores the role and a resource that the role has a set permission.
+
+Cassandra is configured with a default superuser role and password pair of cassandra/cassandra by default. Using this role,
+additional roles can be created using CQL commands. To secure the system, this default role should be deleted once a non-default
+superuser has been created.
+
+Once roles and passwords have been set, Cassandra can be configured to use authentication in the cassandra.yaml file.
+
+If roles exist and Cassandra is configured to use authentication, Cassandra tools must be executed with optional authentication
+options.
+
+
+
+Using cqlsh with authentication
+-------------------------------
+Typically, after configuring authentication, logging into cqlsh requires the -u and -p options to the cqlsh command.
+To set credentials for use when launching cqlsh, create or modify the .cassandra/cqlshrc file. When present, this file passes
+default login information to cqlsh. The cqlshrc.sample file provides an example.
+
+Procedure:
+    Create or modify the cqlshrc file that specifies a role name and password.
+
+    [authentication]
+    username = fred
+    password = !!bang!!$
+
+    Note: Additional settings in the cqlshrc file are described in Creating and using the cqlshrc file.
+    Save the file in home/.cassandra directory and name it cqlshrc.
+    Set permissions on the file to prevent unauthorized access, as the password is stored in plain text. The file must be
+    readable by the user that starts cassandra.
+
+    chmod 440 home/.cassandra/cqlshrc
+
+    Check the permissions on home/.cassandra/cqlshrc_history to ensure that plain text passwords are not compromised.

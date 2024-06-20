@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>200 Ok</title>
+<meta name="description" content="Message page of a web application (200 OK)" />
+<meta name="charset" content="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="css/w3.css" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<script src="js/jquery.js"></script>
+<script src="js/auxlib.js"></script>
+<script src="js/config.js"></script>
+<script>
+$(document).ready(function() {
+  const msg = getCookie(KEY_APP_MESSAGE);
+
+  if (msg) {
+    $('#message').html(msg);
+  }
+
+  $('[name="btnOk"]').focus();
+});
+</script>
+</head><body>
+
+<main>
+
+<div class="vbox" style="height:90vh;font-family:'Droid Sans';font-size:130%">
+
+<h1 class="status200">200 Ok</h1>
+
+<p class="indent" id="message" style="color:magenta"></p>
+
+<div class="btn_center" style="font-family:'Droid Sans'">
+
+<input type="button" name="btnOk" style="width:9rem"
+    class="w3-button w3-large w3-round w3-green w3-hover-green" value="Continue" onclick="moveBack()" />
+
+</div>
+</div>
+</main>
+</body></html>

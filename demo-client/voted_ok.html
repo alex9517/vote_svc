@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Vote Service. Done.</title>
+<meta name="description" content="HTML template" />
+<meta name="keywords" content="html css web site page" />
+<meta name="charset" content="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="css/w3.css" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/form.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/auxlib.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script>
+
+$(function() {
+  if (ALLOW_RESULTS) {
+    $("#message1").html('Your vote was counted. Thanks.<br>Click "Show" to see the results, or "Exit" to leave.');
+  } else {
+    $("#message1").html('Your vote was counted. Thanks.');
+    $('[name="btnOk"]').remove();
+  }
+
+  $('[name="btnCancel"]').focus();
+});
+
+const setFocusOk = () => {
+  $('#btnOk').focus();
+};
+
+const requestResults = () => {
+  window.location.replace("results.html");
+};
+</script>
+</head><body>
+
+<main>
+
+<div class="vbox">
+
+<h1 id="header1">Done.</h1>
+
+<script>
+document.write("<p class=\"date_cen\">" + getCurrDate() + "</p>\n");
+</script>
+
+<h4 style="text-align:center;padding-top:0" id="message1">???</h4>
+
+<div class="btn_center" style="font-family:'Droid Sans'" id="buttons">
+
+<input type="button" name="btnOk" id="btn1" style="width:9rem"
+    class="w3-button w3-large w3-round w3-green w3-hover-green" value="Show" onclick="requestResults()" />
+
+<input type="button" name="btnCancel" style="width:9rem"
+    class="w3-button w3-large w3-round w3-purple w3-hover-purple" value="Exit" onclick="moveBack()" />
+
+</div>
+
+</div>
+
+</main>
+
+</body></html>
